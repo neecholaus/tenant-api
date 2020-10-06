@@ -1,19 +1,12 @@
-let x: string = 'test';
+import express from "express";
 
-console.log(x);
+const app = express();
 
-console.log(typeof x);
+app.get('/', (req, res) => {
+    res.status(500).send({
+        error: true,
+        errorMessage: 'invalid route'
+    });
+});
 
-interface Tenant {
-    name: string;
-    propertyId: number;
-}
-
-let guy: Tenant = {
-    name: "Nick",
-    propertyId: 1
-};
-
-console.log(guy);
-
-console.log(typeof guy);
+app.listen(9000);

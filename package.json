@@ -7,6 +7,7 @@
     "bundle": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
+    "build-watch": "webpack --mode development -w",
     "check-types": "tsc"
   },
   "repository": {
@@ -19,7 +20,9 @@
     "url": "https://github.com/neecholaus/tenant-api/issues"
   },
   "homepage": "https://github.com/neecholaus/tenant-api#readme",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
