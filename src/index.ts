@@ -8,7 +8,7 @@ const app = express();
 // import {Authenticate} from './app/middleware/authenticate';
 
 // routers
-import {authRouter} from './app/modules/auth';
+import {authRouter} from './app/routers/authRouter';
 
 // temp demo of auth
 // app.use(Authenticate.handle);
