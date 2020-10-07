@@ -10,7 +10,7 @@ import {authRouter} from './app/routers/authRouter';
 
 import mongoose from 'mongoose';
 
-mongoose.connect(`mongodb+srv://${process.env.mongo_user}:${process.env.mongo_pass}@cluster0.a5qys.mongodb.net/test`, {
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_SERVER}`, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
