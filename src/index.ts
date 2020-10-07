@@ -1,17 +1,17 @@
 import express from 'express';
-
-import * as http from './app/resources/http';
-
 const app = express();
 
-app.get('/', (req, res) => {
-	res.status(400).send(<http.Response> {
-		success: false,
-		errors: [<http.ResponseError> {
-			title: "Bad Request",
-			httpStatus: 400
-		}]
-	});
-});
+// support env variables
+import * as dotenv from 'dotenv';
+dotenv.config()
+
+// routers
+import {authRouter} from './app/routers/authRouter';
+
+// support json request bodies
+app.use(express.json());
+
+// auth module
+app.use('/auth', authRouter)
 
 app.listen(9000);
