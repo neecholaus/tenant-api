@@ -1,7 +1,10 @@
 import express from 'express';
 
+// drivers
 import * as http from '../resources/http';
-import * as Auth from '../drivers/Auth';
+import Auth from '../drivers/Auth';
+
+// middleware
 import {authenticate} from '../middleware/authenticate';
 
 const router = express.Router();
@@ -44,6 +47,7 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', authenticate, function (req, res) {
+
 	res.send('authenticated');
 });
 
