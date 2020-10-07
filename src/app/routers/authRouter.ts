@@ -52,14 +52,12 @@ router.post('/', function (req, res) {
 
 
 router.get('/', authenticate, function (req: Request, res: Response) {
-	const {MONGO_USER, MONGO_PASS, MONGO_SERVER} = req.app.get('bag').env;
-
-	const mongoose = Db.connect({MONGO_USER, MONGO_PASS, MONGO_SERVER});
+	const mongoose = Db.connect(req.app.get('bag').env ?? {});
 
 	res.send(<http.Response> {
 		success: true,
 		data: {
-			dbConnection: !!mongoose
+			dbConnection: true
 		}
 	});
 });
