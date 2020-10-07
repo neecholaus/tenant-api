@@ -1,11 +1,15 @@
 import express, {Request, Response} from 'express';
 
-// drivers
+// response types
 import * as http from '../resources/http';
+
+// drivers
 import Auth from '../drivers/Auth';
+import Db from '../drivers/Db';
 
 // middleware
 import {authenticate} from '../middleware/authenticate';
+import {mongo} from 'mongoose';
 
 const router = express.Router();
 
@@ -46,9 +50,18 @@ router.post('/', function (req, res) {
 	}
 });
 
+
 router.get('/', authenticate, function (req: Request, res: Response) {
-	console.log(req.app.get('bag'));
-	res.send('authenticated');
+	const {MONGO_USER, MONGO_PASS, MONGO_SERVER} = req.app.get('bag').env;
+
+	const mongoose = Db.connect({MONGO_USER, MONGO_PASS, MONGO_SERVER});
+
+	res.send(<http.Response> {
+		success: true,
+		data: {
+			dbConnection: !!mongoose
+		}
+	});
 });
 
 export default router;

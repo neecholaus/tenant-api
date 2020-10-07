@@ -11,15 +11,15 @@ import authRouter from './app/routers/authRouter';
 // support json request bodies
 app.use(express.json());
 
-const includeState = (req: Request, res: Response, next: NextFunction) => {
-	req.app.set('bag', {
-		testVal: 'testing'
-	});
+// application wide value bag
+let bag = {
+	env: process.env
+};
 
-	next();
-}
+// assign value bag to express instance
+app.set('bag', bag);
 
 // auth module
-app.use('/auth', includeState, authRouter)
+app.use('/auth', authRouter);
 
 app.listen(9000);

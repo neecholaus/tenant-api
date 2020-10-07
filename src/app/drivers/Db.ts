@@ -1,13 +1,15 @@
 import * as mongoose from 'mongoose';
 
 class Db {
-	static connect() {
-		mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_SERVER}`, {
+	static connect(env: {MONGO_USER, MONGO_PASS, MONGO_SERVER}) {
+		const connectionUrl = `mongodb+srv://${env.MONGO_USER}:${env.MONGO_PASS}@${env.MONGO_SERVER}`;
+
+		mongoose.connect(connectionUrl, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});
 
-		return mongoose
+		return mongoose;
 	}
 }
 
