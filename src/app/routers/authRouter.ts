@@ -43,10 +43,7 @@ router.post('/', function (req, res) {
 	}
 });
 
-// auth middleware for remaining routes - not ideal, will change
-router.use(authenticate);
-
-router.get('/', function (req, res) {
+router.get('/', authenticate, function (req, res) {
 	res.send('authenticated');
 });
 
