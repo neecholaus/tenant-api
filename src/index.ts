@@ -1,20 +1,19 @@
 import express from 'express';
-
-import * as http from './app/resources/http';
-import {Authenticate} from './app/middleware/authenticate';
-
 const app = express();
 
-app.use(Authenticate.handle);
+// framework interfaces
+// import * as http from './app/resources/http';
 
-app.get('/', (req, res) => {
-	res.status(400).send(<http.Response> {
-		success: false,
-		errors: [<http.ResponseError> {
-			title: "Bad Request",
-			httpStatus: 400
-		}]
-	});
-});
+// middleware
+// import {Authenticate} from './app/middleware/authenticate';
+
+// routers
+import {authRouter} from './app/modules/auth';
+
+// temp demo of auth
+// app.use(Authenticate.handle);
+
+// auth module
+app.use('/auth', authRouter)
 
 app.listen(9000);
