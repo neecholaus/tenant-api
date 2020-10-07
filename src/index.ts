@@ -5,6 +5,9 @@ const app = express();
 import dotenv from 'dotenv';
 dotenv.config()
 
+// middleware
+import {checkDbConnection} from './app/middleware/checkDbConnection';
+
 // routers
 import authRouter from './app/routers/authRouter';
 
@@ -20,6 +23,6 @@ let bag = {
 app.set('bag', bag);
 
 // auth module
-app.use('/auth', authRouter);
+app.use('/auth', checkDbConnection, authRouter);
 
 app.listen(9000);

@@ -10,6 +10,7 @@ import Db from '../drivers/Db';
 // middleware
 import {authenticate} from '../middleware/authenticate';
 import {mongo} from 'mongoose';
+import {checkDbConnection} from '../middleware/checkDbConnection';
 
 const router = express.Router();
 
@@ -52,12 +53,10 @@ router.post('/', function (req, res) {
 
 
 router.get('/', authenticate, function (req: Request, res: Response) {
-	const mongoose = Db.connect(req.app.get('bag').env ?? {});
-
 	res.send(<http.Response> {
 		success: true,
 		data: {
-			dbConnection: true
+			authenticated: true
 		}
 	});
 });
