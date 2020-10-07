@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 
 // drivers
 import * as http from '../resources/http';
@@ -46,8 +46,8 @@ router.post('/', function (req, res) {
 	}
 });
 
-router.get('/', authenticate, function (req, res) {
-
+router.get('/', authenticate, function (req: Request, res: Response) {
+	console.log(req.app.get('bag'));
 	res.send('authenticated');
 });
 
