@@ -8,17 +8,39 @@ const router = express.Router();
 
 router.post('/', function (req, res) {
 	// assuming credentials match
+	const tempMatchingCreds = {
+		email: 'test@test.com',
+		pass: 'temppass'
+	};
 
-	// temp payload
-	const token = Auth.generateToken({
-		firstName: 'fred',
-		email: 'test@gmail.com'
-	});
+	const passedCreds = {
+		email: req.body.email,
+		pass: req.body.pass // will be encrypted
+	};
 
-	res.send(<http.Response> {
-		success: true,
-		data: {token}
-	});
+	// passed creds matched
+	if (
+		passedCreds.email == tempMatchingCreds.email &&
+		passedCreds.pass == tempMatchingCreds.pass
+	) {
+		const token = Auth.generateToken(passedCreds);
+
+		res.send(<http.Response> {
+			success: true,
+			data: {token}
+		});
+	} else {
+		res
+			.status(403)
+			.send(<http.Response> {
+				success: false,
+				errors: [<http.ResponseError> {
+					title: 'Forbidden',
+					detail: 'Credentials were invalid.',
+					httpStatus: 403
+				}]
+			});
+	}
 });
 
 // auth middleware for remaining routes - not ideal, will change
