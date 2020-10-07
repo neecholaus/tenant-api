@@ -1,11 +1,23 @@
 import express from 'express';
 
+import * as http from '../resources/http';
+import * as auth from '../middleware/authenticate';
+
 const router = express.Router();
 
-router.get('/test', function (req, res) {
-	console.log('getting test');
+router.post('/', function (req, res) {
+	// assuming credentials match
 
-	res.status(200).send('all good :)');
+	// temp payload
+	const token = auth.generateToken({
+		firstName: 'fred',
+		email: 'test@gmail.com'
+	});
+
+	res.send(<http.Response> {
+		success: true,
+		data: {token}
+	});
 });
 
 
