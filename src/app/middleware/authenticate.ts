@@ -17,8 +17,3 @@ import * as jwt from 'jsonwebtoken';
 //
 // 	next();
 // }
-
-export function generateToken(payload) {
-	// TODO - move secret to env file
-	return jwt.sign(payload, 'secret');
-}
