@@ -5,12 +5,9 @@ import * as http from '../resources/http';
 
 // drivers
 import Auth from '../drivers/Auth';
-import Db from '../drivers/Db';
 
 // middleware
 import {authenticate} from '../middleware/authenticate';
-import {mongo} from 'mongoose';
-import {checkDbConnection} from '../middleware/checkDbConnection';
 
 const router = express.Router();
 
