@@ -1,4 +1,12 @@
+# ide
 .idea
+
+# packages
 node_modules
 
+# transpiled
+**/*.js
+**/*.map
+
+# bundled entrypoint
 server.js
