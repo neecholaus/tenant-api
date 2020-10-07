@@ -4,7 +4,7 @@ class Db {
 	static async connect(env: {MONGO_USER, MONGO_PASS, MONGO_SERVER}) {
 		const {MONGO_USER, MONGO_PASS, MONGO_SERVER} = env;
 
-		const connectionUrl = `mongodb+srv://s${MONGO_USER}:${MONGO_PASS}@${MONGO_SERVER}`;
+		const connectionUrl = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_SERVER}`;
 
 		try {
 			await mongoose.connect(connectionUrl, {
