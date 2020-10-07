@@ -6,14 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 // routers
-import {authRouter} from './app/routers/authRouter';
-
-import mongoose from 'mongoose';
-
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_SERVER}`, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true
-});
+import authRouter from './app/routers/authRouter';
 
 // support json request bodies
 app.use(express.json());

@@ -51,4 +51,4 @@ router.get('/', authenticate, function (req, res) {
 	res.send('authenticated');
 });
 
-export {router as authRouter};
+export default router;
