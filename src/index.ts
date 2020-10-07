@@ -1,6 +1,10 @@
 import express from 'express';
 const app = express();
 
+// support env variables
+import * as dotenv from 'dotenv';
+dotenv.config()
+
 // routers
 import {authRouter} from './app/routers/authRouter';
 
