@@ -2,6 +2,7 @@ import express from 'express';
 
 import * as http from '../resources/http';
 import * as Auth from '../drivers/Auth';
+import {authenticate} from '../middleware/authenticate';
 
 const router = express.Router();
 
@@ -20,5 +21,11 @@ router.post('/', function (req, res) {
 	});
 });
 
+// auth middleware for remaining routes - not ideal, will change
+router.use(authenticate);
+
+router.get('/', function (req, res) {
+	res.send('authenticated');
+});
 
 export {router as authRouter};
