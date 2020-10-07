@@ -7,7 +7,8 @@ export function generateToken(payload: object): string {
 	return jwt.sign(payload, 'secret');
 }
 
-export function decodeToken(token: string): object|null {
+// Will attempt to decode and return token, if exception, return throw custom error.
+export function decodeToken(token: string): object {
 	try {
 		return jwt.verify(token, 'secret');
 	} catch (err) {
