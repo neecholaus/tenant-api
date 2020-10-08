@@ -1,27 +1,6 @@
 import * as mongoose from 'mongoose';
 import {NextFunction} from 'express';
 
-const UserSchema = new mongoose.Schema({
-	email: String,
-	phone: String,
-	firstName: String,
-	lastName: String,
-	password: String,
-	createdAt: Date,
-	updatedAt: Date
-}).pre<IUser>("update", function (next: NextFunction) {
-	this.updatedAt = new Date();
-	next();
-}).pre<IUser>("save", function (next: NextFunction) {
-	if (!this.createdAt) {
-		this.createdAt = new Date();
-	}
-
-	this.updatedAt = new Date();
-
-	next();
-});
-
 interface IUser extends mongoose.Document {
 	email: string;
 	phone: string;
@@ -31,5 +10,33 @@ interface IUser extends mongoose.Document {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+const UserSchema = new mongoose.Schema({
+	email: String,
+	phone: String,
+	firstName: String,
+	lastName: String,
+	password: String,
+	createdAt: Date,
+	updatedAt: Date
+});
+
+// document middleware
+UserSchema.pre<IUser>('save', function (next: NextFunction) {
+	console.log('saving');
+	if (!this.createdAt) {
+		this.createdAt = new Date();
+	}
+
+	next();
+});
+
+// query middleware
+UserSchema.pre<IUser>('updateOne', function (next: NextFunction) {
+	console.log('updating one');
+	this.set({updatedAt: new Date()});
+
+	next();
+});
 
 export default mongoose.model('User', UserSchema);
