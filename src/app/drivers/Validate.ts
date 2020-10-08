@@ -1,6 +1,8 @@
 import * as http from '../resources/http';
 
 class Validate {
+
+	// returns array of errors if fields specified in requiredInputs are not present in body
 	static require(requiredInputs: string[], body: object): http.ResponseError[] {
 		let errors = [];
 
