@@ -1,8 +1,5 @@
 import express, {Request, Response} from 'express';
 
-// response types
-import * as http from '../resources/http';
-
 // middleware
 import {authenticate} from '../middleware/authenticate';
 

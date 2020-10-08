@@ -3,6 +3,7 @@ import {NextFunction} from 'express';
 
 const UserSchema = new mongoose.Schema({
 	email: String,
+	phone: String,
 	firstName: String,
 	lastName: String,
 	password: String,
@@ -23,6 +24,7 @@ const UserSchema = new mongoose.Schema({
 
 interface IUser extends mongoose.Document {
 	email: string;
+	phone: string;
 	password: string;
 	firstName: string;
 	lastName: string;
