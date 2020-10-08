@@ -260,6 +260,7 @@ export default class UserController {
 		});
 	}
 
+	// verify token, update user's password
 	static async updatePassword(req: Request, res: Response) {
 		const {passwordResetToken, password} = req.body;
 

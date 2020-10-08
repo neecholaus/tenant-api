@@ -28,6 +28,7 @@ router.get('/reset-password', function (req: Request, res: Response) {
 	return UserController.inquirePasswordReset(req, res);
 });
 
+// submit new password
 router.put('/reset-password', function (req: Request, res: Response) {
 	return UserController.updatePassword(req, res);
 });
