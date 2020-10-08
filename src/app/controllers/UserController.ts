@@ -204,6 +204,15 @@ export default class UserController {
 			});
 	}
 
+	// begin password reset flow
+	static inquirePasswordReset(req: Request, res: Response) {
+		// generate token
+
+		// update user with token and expiration date
+
+		// return token to client
+	}
+
 	// returns data included in token payload
 	static whoami(req: Request, res: Response) {
 		res.send(<http.Response> {
