@@ -11,7 +11,23 @@ import {authenticate} from '../middleware/authenticate';
 
 const router = express.Router();
 
-router.post('/', function (req, res) {
+// creates new user
+router.post('/create-account', function (req: Request, res: Response) {
+	const {email, firstName, lastName, password} = req.body;
+
+	// check for existing user by email
+
+	// create user
+
+	// gen token with user info in payload
+
+	// return with token
+
+	res.send('ok');
+});
+
+
+router.post('/', function (req: Request, res: Response) {
 	// assuming credentials match
 	const tempMatchingCreds = {
 		email: 'test@test.com',
