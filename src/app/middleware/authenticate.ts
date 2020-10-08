@@ -14,7 +14,8 @@ export function authenticate(req, res, next) {
 		// attempt to decode token
 		let decoded: object = Auth.decodeToken(bearerToken);
 
-		// attach decoded to session
+		// attach decoded payload to session
+		req.app.set('authPayload', decoded);
 	} catch (err) {
 		res
 			.status(403)
