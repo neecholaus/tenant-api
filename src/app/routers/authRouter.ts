@@ -135,41 +135,23 @@ router.post('/', async function (req: Request, res: Response) {
 		return;
 	}
 
-	res.send('ok');
-	return;
+	const token = Auth.generateToken({
+		id: user._id,
+		email
+	});
 
-	// passed creds matched
-	if (
-		passedCreds.email == tempMatchingCreds.email &&
-		passedCreds.pass == tempMatchingCreds.pass
-	) {
-		const token = Auth.generateToken(passedCreds);
-
-		res.send(<http.Response> {
-			success: true,
-			data: {token}
-		});
-	} else {
-		res
-			.status(403)
-			.send(<http.Response> {
-				success: false,
-				errors: [<http.ResponseError> {
-					title: 'Forbidden',
-					detail: 'Credentials were invalid.',
-					httpStatus: 403
-				}]
-			});
-	}
+	res.send(<http.Response> {
+		success: true,
+		data: {token}
+	});
 });
 
-
+// test authed endpoint
 router.get('/', authenticate, function (req: Request, res: Response) {
-	console.log(req.app.get('authPayload'));
 	res.send(<http.Response> {
 		success: true,
 		data: {
-			authenticated: true
+			payload: req.app.get('authPayload')
 		}
 	});
 });
