@@ -82,18 +82,48 @@ router.post('/create-user', async function (req: Request, res: Response) {
 	});
 });
 
+// sign in and get jwt token
+router.post('/', async function (req: Request, res: Response) {
+	// ensure email and password were passed
+	const missingInputErrors = Validate.require(['email', 'password'], req.body);
 
-router.post('/', function (req: Request, res: Response) {
-	// assuming credentials match
-	const tempMatchingCreds = {
-		email: 'test@test.com',
-		pass: 'temppass'
-	};
+	// return any errors
+	if (missingInputErrors.length) {
+		res
+			.status(400)
+			.send(<http.Response> {
+				success: false,
+				errors: missingInputErrors
+			});
 
-	const passedCreds = {
-		email: req.body.email,
-		pass: req.body.pass // will be encrypted
-	};
+		return;
+	}
+
+	const {email, password} = req.body;
+
+	// grab user from db
+	const user = await User.findOne({email});
+
+	// return error if user not found
+	if (!user) {
+		res
+			.status(400)
+			.send(<http.Response> {
+				success: false,
+				errors: [<http.ResponseError> {
+					title: 'Invalid E-mail',
+					detail: 'E-mail was not tied to any existing user.',
+					httpStatus: 400
+				}]
+			});
+
+		return;
+	}
+
+	console.log(user);
+
+	res.send('ok');
+	return;
 
 	// passed creds matched
 	if (
