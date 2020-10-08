@@ -9,13 +9,30 @@ import Auth from '../drivers/Auth';
 // middleware
 import {authenticate} from '../middleware/authenticate';
 
+// models
+import User from '../models/User';
+
 const router = express.Router();
 
 // creates new user
-router.post('/create-account', function (req: Request, res: Response) {
+router.post('/create-account', async function (req: Request, res: Response) {
 	const {email, firstName, lastName, password} = req.body;
 
 	// check for existing user by email
+	if (await User.exists({email})) {
+		res
+			.status(409)
+			.send(<http.Response> {
+				success: false,
+				errors: [<http.ResponseError> {
+					title: 'Email',
+					detail: 'This e-mail has already been used.',
+					httpStatus: 409
+				}],
+			});
+
+		return;
+	}
 
 	// create user
 
