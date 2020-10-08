@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto-random-string';
 
 class Auth {
 
@@ -28,6 +29,14 @@ class Auth {
 	// returns whether passed plain text hashes to equivalent of passed hashed string
 	static stringMatchesHash(plainTextPass: string, hashedComparison: string): boolean {
 		return bcrypt.compareSync(plainTextPass, hashedComparison);
+	}
+
+	// returns random string
+	static randomString(length: number = 12) {
+		return crypto({
+			length: length,
+			type: 'distinguishable'
+		});
 	}
 }
 
