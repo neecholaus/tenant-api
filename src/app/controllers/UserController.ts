@@ -285,7 +285,6 @@ export default class UserController {
 		const currentUnix = Math.floor(Date.now() / 1000);
 
 		// compare now vs token expiration
-		console.log(currentUnix, user.get('passwordResetTokenExp'));
 		if (currentUnix > user.get('passwordResetTokenExp')) {
 			res
 				.status(410)
@@ -300,7 +299,14 @@ export default class UserController {
 			return;
 		}
 
-		res.send('ok');
+		// update user with new password
+		await user.update({
+			password: Auth.hashString(password),
+			passwordResetToken: null,
+			passwordResetTokenExp: null,
+		});
+
+		res.send(<http.Response> {success: true});
 	}
 
 	// returns data included in token payload
