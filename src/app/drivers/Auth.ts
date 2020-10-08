@@ -5,7 +5,10 @@ class Auth {
 
 	// Takes an object, generates and returns a JWT token.
 	static generateToken(payload: object): string {
-		return jwt.sign(payload, process.env.JWT_SECRET);
+		return jwt.sign({
+			...payload,
+			exp: Math.floor(Date.now() / 1000) + (60 * 60)
+		}, process.env.JWT_SECRET);
 	}
 
 	// Will attempt to decode and return token, if exception, throw custom error.
