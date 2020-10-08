@@ -5,6 +5,7 @@ import User from '../models/User';
 import Auth from '../drivers/Auth';
 
 export default class UserController {
+	// handle account creation
 	static async createAccount(req: Request, res: Response) {
 		// ensure required fields are present
 		const missingInputErrors = Validate.require([

@@ -3,10 +3,6 @@ import express, {Request, Response} from 'express';
 // response types
 import * as http from '../resources/http';
 
-// drivers
-import Auth from '../drivers/Auth';
-import Validate from '../drivers/Validate';
-
 // middleware
 import {authenticate} from '../middleware/authenticate';
 
