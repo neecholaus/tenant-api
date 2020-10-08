@@ -120,7 +120,20 @@ router.post('/', async function (req: Request, res: Response) {
 		return;
 	}
 
-	console.log(user);
+	// return error if password does not match
+	if (!Auth.stringMatchesHash(password, user.password)) {
+		res
+			.status(400)
+			.send(<http.Response> {
+				success: false,
+				errors: [<http.ResponseError> {
+					title: 'Invalid Password',
+					httpStatus: 400
+				}]
+			});
+
+		return;
+	}
 
 	res.send('ok');
 	return;
