@@ -174,10 +174,11 @@ export default class UserController {
 
 		const {email} = req.body;
 
-		let updated = await User.updateOne({email}, updatedValues);
+		let update = await User.updateOne({email}, updatedValues);
 
 		// build either successful or error response
-		if (updated.nModified) {
+		// return error if no data was different
+		if (update.nModified) {
 			res
 				.status(200)
 				.send(<http.Response> {
@@ -191,6 +192,7 @@ export default class UserController {
 					success: false,
 					errors: [<http.ResponseError> {
 						title: 'Update Failed',
+						detail: 'No data needed to be updated.',
 						httpStatus: 500
 					}]
 				});
