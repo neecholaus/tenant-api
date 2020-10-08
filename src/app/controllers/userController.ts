@@ -4,7 +4,71 @@ import * as http from '../resources/http';
 import User from '../models/User';
 import Auth from '../drivers/Auth';
 
-export default class userController {
+export default class UserController {
+	static async createAccount(req: Request, res: Response) {
+		// ensure required fields are present
+		const missingInputErrors = Validate.require([
+			'email',
+			'password',
+			'firstName',
+			'lastName'
+		], req.body);
+
+		// return errors if required field(s) are missing
+		if (missingInputErrors.length) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: missingInputErrors
+				})
+
+			return;
+		}
+
+		// pull info from body
+		let {email, firstName, lastName, password} = req.body;
+
+		// encrypt pass
+		password = Auth.hashString(password);
+
+		// check for existing user by email
+		if (await User.exists({email})) {
+			res
+				.status(409)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Duplicate Email',
+						detail: 'This e-mail has already been used.',
+						httpStatus: 409
+					}],
+				});
+
+			return;
+		}
+
+		// create user
+		const user = await (new User({email, firstName, lastName, password})).save();
+
+		// build payload for JWT token
+		const payload = {
+			id: user._id,
+			email
+		};
+
+		// gen token with user info in payload
+		const token = Auth.generateToken(payload);
+
+		// return with token
+		res.send(<http.Response> {
+			success: true,
+			data: {
+				token
+			}
+		});
+	}
+
 	// handle request for jwt token
 	static async signIn(req: Request, res: Response) {
 		// ensure email and password were passed
