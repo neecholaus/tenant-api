@@ -28,7 +28,7 @@ export default class UserController {
 		}
 
 		// pull info from body
-		let {email, firstName, lastName, password} = req.body;
+		let {email, phone, firstName, lastName, password} = req.body;
 
 		// encrypt pass
 		password = Auth.hashString(password);
@@ -50,7 +50,7 @@ export default class UserController {
 		}
 
 		// create user
-		const user = await (new User({email, firstName, lastName, password})).save();
+		const user = await (new User({email, phone, firstName, lastName, password})).save();
 
 		// build payload for JWT token
 		const payload = {
