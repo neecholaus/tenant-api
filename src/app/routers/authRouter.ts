@@ -16,7 +16,49 @@ const router = express.Router();
 
 // creates new user
 router.post('/create-user', async function (req: Request, res: Response) {
-	const {email, firstName, lastName, password} = req.body;
+	// TODO - abstract to required input validator
+
+	let requiredInputs = ['email', 'password', 'firstName', 'lastName'];
+	let missingInputErrors = [];
+	for (let input in requiredInputs) {
+		// if required field is not populated in request
+		if (Object.keys(req.body).indexOf(requiredInputs[input]) == -1) {
+			missingInputErrors.push(<http.ResponseError> {
+				title: 'Missing Input',
+				detail: requiredInputs[input] + ' was not provided.',
+				httpStatus: 400
+			});
+
+			continue;
+		}
+
+		// if value provided but falsy
+		if (!req.body[requiredInputs[input]]) {
+			missingInputErrors.push(<http.ResponseError> {
+				title: 'Invalid Input',
+				detail: requiredInputs[input] + ' was invalid.',
+				httpStatus: 400
+			});
+		}
+	}
+
+	// return errors
+	if (missingInputErrors.length) {
+		res
+			.status(400)
+			.send(<http.Response> {
+				success: false,
+				errors: missingInputErrors
+			})
+
+		return;
+	}
+
+	// pull info from body
+	let {email, firstName, lastName, password} = req.body;
+
+	// encrypt pass
+	password = Auth.hashString(password);
 
 	// check for existing user by email
 	if (await User.exists({email})) {
@@ -33,8 +75,6 @@ router.post('/create-user', async function (req: Request, res: Response) {
 
 		return;
 	}
-
-	// TODO - encrypt pass
 
 	// create user
 	const user = await (new User({email, firstName, lastName, password})).save();
