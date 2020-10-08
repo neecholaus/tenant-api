@@ -150,6 +150,28 @@ export default class UserController {
 			return;
 		}
 
+		// pull email from jwt token
+		const tokenEmail: string = req.app.get('authPayload').email;
+
+		// pull email, for authorization check as well as update search
+		const {email} = req.body;
+
+		// ensure user updating is user being updated
+		if (tokenEmail !== email) {
+			res
+				.status(403)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Unauthorized',
+						detail: 'You are not signed in as the user being updated.',
+						httpStatus: 403
+					}]
+				});
+
+			return;
+		}
+
 		// only update these fields
 		const possibleUpdateFields: string[] = [
 			'phone',
@@ -172,31 +194,14 @@ export default class UserController {
 			updatedValues[inputName] = req.body[inputName];
 		}
 
-		const {email} = req.body;
+		await User.updateOne({email}, updatedValues);
 
-		let update = await User.updateOne({email}, updatedValues);
-
-		// build either successful or error response
-		// return error if no data was different
-		if (update.nModified) {
-			res
-				.status(200)
-				.send(<http.Response> {
-					success: true,
-					data: {updatedValues}
-				});
-		} else {
-			res
-				.status(500)
-				.send(<http.Response> {
-					success: false,
-					errors: [<http.ResponseError> {
-						title: 'Update Failed',
-						detail: 'No data needed to be updated.',
-						httpStatus: 500
-					}]
-				});
-		}
+		res
+			.status(200)
+			.send(<http.Response> {
+				success: true,
+				data: {updatedValues}
+			});
 	}
 
 	// returns data included in token payload

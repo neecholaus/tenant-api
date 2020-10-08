@@ -19,7 +19,7 @@ router.post('/', async function (req: Request, res: Response) {
 });
 
 // update
-router.put('/update', function (req: Request, res: Response) {
+router.put('/update', authenticate, function (req: Request, res: Response) {
 	return UserController.update(req, res);
 });
 

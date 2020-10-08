@@ -23,7 +23,6 @@ const UserSchema = new mongoose.Schema({
 
 // document middleware
 UserSchema.pre<IUser>('save', function (next: NextFunction) {
-	console.log('saving');
 	if (!this.createdAt) {
 		this.createdAt = new Date();
 	}
@@ -33,7 +32,6 @@ UserSchema.pre<IUser>('save', function (next: NextFunction) {
 
 // query middleware
 UserSchema.pre<IUser>('updateOne', function (next: NextFunction) {
-	console.log('updating one');
 	this.set({updatedAt: new Date()});
 
 	next();
