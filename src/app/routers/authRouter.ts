@@ -121,7 +121,7 @@ router.post('/', async function (req: Request, res: Response) {
 	}
 
 	// return error if password does not match
-	if (!Auth.stringMatchesHash(password, user.password)) {
+	if (!Auth.stringMatchesHash(password, user.get('password'))) {
 		res
 			.status(400)
 			.send(<http.Response> {
