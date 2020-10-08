@@ -5,6 +5,7 @@ import * as http from '../resources/http';
 
 // drivers
 import Auth from '../drivers/Auth';
+import Validate from '../drivers/Validate';
 
 // middleware
 import {authenticate} from '../middleware/authenticate';
@@ -18,33 +19,15 @@ const router = express.Router();
 
 // creates new user
 router.post('/create-user', async function (req: Request, res: Response) {
-	// TODO - abstract to required input validator
+	// ensure required fields are present
+	const missingInputErrors = Validate.require([
+		'email',
+		'password',
+		'firstName',
+		'lastName'
+	], req.body);
 
-	let requiredInputs = ['email', 'password', 'firstName', 'lastName'];
-	let missingInputErrors = [];
-	for (let input in requiredInputs) {
-		// if required field is not populated in request
-		if (Object.keys(req.body).indexOf(requiredInputs[input]) == -1) {
-			missingInputErrors.push(<http.ResponseError> {
-				title: 'Missing Input',
-				detail: requiredInputs[input] + ' was not provided.',
-				httpStatus: 400
-			});
-
-			continue;
-		}
-
-		// if value provided but falsy
-		if (!req.body[requiredInputs[input]]) {
-			missingInputErrors.push(<http.ResponseError> {
-				title: 'Invalid Input',
-				detail: requiredInputs[input] + ' was invalid.',
-				httpStatus: 400
-			});
-		}
-	}
-
-	// return errors
+	// return errors if required field(s) are missing
 	if (missingInputErrors.length) {
 		res
 			.status(400)
