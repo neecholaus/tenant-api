@@ -22,8 +22,5 @@ export async function checkDbConnection(req: Request, res: Response, next: NextF
 		return;
 	}
 
-	// attach to request
-	req.app.set('db', connection);
-
 	next();
 }
