@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 class Auth {
 
@@ -14,6 +15,16 @@ class Auth {
 		} catch (err) {
 			throw new Error('Token was provided but was invalid.');
 		}
+	}
+
+	// returns hashed passed string
+	static hashString(password: string): string {
+		return bcrypt.hashSync(password, 10);
+	}
+
+	// returns whether passed plain text hashes to equivalent of passed hashed string
+	static stringMatchesHash(plainTextPass: string, hashedComparison: string): boolean {
+		return bcrypt.compareSync(plainTextPass, hashedComparison);
 	}
 }
 
