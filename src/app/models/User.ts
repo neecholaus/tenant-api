@@ -8,7 +8,7 @@ interface IUser extends mongoose.Document {
 	firstName: string;
 	lastName: string;
 	passwordResetToken: string;
-	passwordResetTokenExp: Date;
+	passwordResetTokenExp: number;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
 	lastName: String,
 	password: String,
 	passwordResetToken: String,
-	passwordResetTokenExp: Date,
+	passwordResetTokenExp: Number,
 	createdAt: Date,
 	updatedAt: Date
 });

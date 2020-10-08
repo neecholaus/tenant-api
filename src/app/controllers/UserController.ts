@@ -205,7 +205,7 @@ export default class UserController {
 	}
 
 	// begin password reset flow
-	static inquirePasswordReset(req: Request, res: Response) {
+	static async inquirePasswordReset(req: Request, res: Response) {
 		const token = Auth.randomString(20);
 
 		// check if email was provided
@@ -223,11 +223,41 @@ export default class UserController {
 			return;
 		}
 
-		res.send('ok');
+		const {email} = req.body;
 
-		// update user with token and expiration date
+		// pull user from db
+		const user = await User.findOne({email});
 
-		// return token to client
+		// ensure user was found
+		if (!user) {
+			res
+				.status(404)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Not Found',
+						detail: 'User does not exist with that email.',
+						httpStatus: 404
+					}]
+				});
+
+			return;
+		}
+
+		// 10 seconds in future
+		const tokenExpiresAt = Math.floor(Date.now() / 1000) * 10;
+
+		// perform update
+		await user.update({
+			passwordResetToken: token,
+			passwordResetTokenExp: tokenExpiresAt
+		});
+
+		// return token and email to client even if email does not exist
+		res.send(<http.Response> {
+			success: true,
+			data: {token, email, tokenExpiresAt}
+		});
 	}
 
 	// returns data included in token payload
