@@ -5,8 +5,8 @@ import User from '../models/User';
 import Auth from '../drivers/Auth';
 
 export default class UserController {
-	// handle account creation
-	static async createAccount(req: Request, res: Response) {
+	// store user
+	static async store(req: Request, res: Response) {
 		// ensure required fields are present
 		const missingInputErrors = Validate.require([
 			'email',
@@ -70,7 +70,7 @@ export default class UserController {
 		});
 	}
 
-	// handle request for jwt token
+	// compare credentials, return jwt token
 	static async signIn(req: Request, res: Response) {
 		// ensure email and password were passed
 		const missingInputErrors = Validate.require(['email', 'password'], req.body);
@@ -132,6 +132,54 @@ export default class UserController {
 			success: true,
 			data: {token}
 		});
+	}
+
+	// update user
+	static async update(req: Request, res: Response) {
+		// ensure email is provided since this will be our search fielda
+		const missingInputErrors: http.ResponseError[] = Validate.require(['email'], req.body);
+
+		if (missingInputErrors.length) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: missingInputErrors
+				});
+
+			return;
+		}
+
+		// only update these fields
+		const possibleUpdateFields: string[] = [
+			'email',
+			'phone',
+			'firstName',
+			'lastName'
+		];
+
+		// pull values of fields we want to update
+		const updatedKeys: string[] = Object.keys(req.body).filter(key => {
+			return possibleUpdateFields.indexOf(key) >= 0;
+		});
+
+		// object for sanitized mapping of request body
+		let updatedValues: object = {};
+
+		// move value from request body to sanitized mapping
+		for (let index in updatedKeys) {
+			let inputName: string = updatedKeys[index];
+
+			updatedValues[inputName] = req.body[inputName];
+		}
+
+		const {email} = req.body;
+
+		let updated = await User.updateOne({email}, updatedValues);
+
+		console.log(updated);
+
+		res.send('ok');
 	}
 
 	// returns data included in token payload

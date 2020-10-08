@@ -8,14 +8,19 @@ import UserController from '../controllers/UserController';
 
 const router = express.Router();
 
-// creates new user
-router.post('/create-account', async function (req: Request, res: Response) {
-	return UserController.createAccount(req, res);
+// store
+router.post('/create', async function (req: Request, res: Response) {
+	return UserController.store(req, res);
 });
 
 // sign in
 router.post('/', async function (req: Request, res: Response) {
 	return UserController.signIn(req, res);
+});
+
+// update
+router.put('/update', function (req: Request, res: Response) {
+	return UserController.update(req, res);
 });
 
 // test authed endpoint
