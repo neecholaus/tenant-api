@@ -206,7 +206,24 @@ export default class UserController {
 
 	// begin password reset flow
 	static inquirePasswordReset(req: Request, res: Response) {
-		// generate token
+		const token = Auth.randomString(20);
+
+		// check if email was provided
+		const missingEmailError = Validate.require(['email'], req.body);
+
+		// return error if email was not provided
+		if (missingEmailError.length) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: missingEmailError
+				});
+
+			return;
+		}
+
+		res.send('ok');
 
 		// update user with token and expiration date
 
