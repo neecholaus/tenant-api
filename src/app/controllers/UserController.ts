@@ -245,7 +245,7 @@ export default class UserController {
 		}
 
 		// 10 seconds in future
-		const tokenExpiresAt = Math.floor(Date.now() / 1000) * 10;
+		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 10;
 
 		// perform update
 		await user.update({
