@@ -15,7 +15,7 @@ import User from '../models/User';
 const router = express.Router();
 
 // creates new user
-router.post('/create-account', async function (req: Request, res: Response) {
+router.post('/create-user', async function (req: Request, res: Response) {
 	const {email, firstName, lastName, password} = req.body;
 
 	// check for existing user by email
@@ -25,7 +25,7 @@ router.post('/create-account', async function (req: Request, res: Response) {
 			.send(<http.Response> {
 				success: false,
 				errors: [<http.ResponseError> {
-					title: 'Email',
+					title: 'Duplicate Email',
 					detail: 'This e-mail has already been used.',
 					httpStatus: 409
 				}],
@@ -34,13 +34,27 @@ router.post('/create-account', async function (req: Request, res: Response) {
 		return;
 	}
 
+	// TODO - encrypt pass
+
 	// create user
+	const user = await (new User({email, firstName, lastName, password})).save();
+
+	// build payload for JWT token
+	const payload = {
+		id: user._id,
+		email
+	};
 
 	// gen token with user info in payload
+	const token = Auth.generateToken(payload);
 
 	// return with token
-
-	res.send('ok');
+	res.send(<http.Response> {
+		success: true,
+		data: {
+			token
+		}
+	});
 });
 
 
@@ -83,6 +97,7 @@ router.post('/', function (req: Request, res: Response) {
 
 
 router.get('/', authenticate, function (req: Request, res: Response) {
+	console.log(req.app.get('authPayload'));
 	res.send(<http.Response> {
 		success: true,
 		data: {
