@@ -14,6 +14,8 @@ import User from '../models/User';
 
 const router = express.Router();
 
+// TODO - abstract route handling to controllers
+
 // creates new user
 router.post('/create-user', async function (req: Request, res: Response) {
 	// TODO - abstract to required input validator
