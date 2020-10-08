@@ -204,6 +204,112 @@ export default class UserController {
 			});
 	}
 
+	// begin password reset flow
+	static async inquirePasswordReset(req: Request, res: Response) {
+		const token = Auth.randomString(20);
+
+		// check if email was provided
+		const missingEmailError = Validate.require(['email'], req.body);
+
+		// return error if email was not provided
+		if (missingEmailError.length) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: missingEmailError
+				});
+
+			return;
+		}
+
+		const {email} = req.body;
+
+		// pull user from db
+		const user = await User.findOne({email});
+
+		// ensure user was found
+		if (!user) {
+			res
+				.status(404)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Not Found',
+						detail: 'User does not exist with that email.',
+						httpStatus: 404
+					}]
+				});
+
+			return;
+		}
+
+		// 10 seconds in future
+		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 30;
+
+		// perform update
+		await user.update({
+			passwordResetToken: token,
+			passwordResetTokenExp: tokenExpiresAt
+		});
+
+		// return token and email to client even if email does not exist
+		res.send(<http.Response> {
+			success: true,
+			data: {token, email, tokenExpiresAt}
+		});
+	}
+
+	// verify token, update user's password
+	static async updatePassword(req: Request, res: Response) {
+		const {passwordResetToken, password} = req.body;
+
+		// find user by token
+		const user = await User.findOne({passwordResetToken});
+
+		// ensure token is real and assigned to user
+		if (!user) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Bad Token',
+						detail: 'The token provided does not match any users.',
+						httpStatus: 400
+					}]
+				});
+
+			return;
+		}
+
+		const currentUnix = Math.floor(Date.now() / 1000);
+
+		// compare now vs token expiration
+		if (currentUnix > user.get('passwordResetTokenExp')) {
+			res
+				.status(410)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Expired',
+						detail: 'Password reset link has expired.'
+					}]
+				});
+
+			return;
+		}
+
+		// update user with new password
+		await user.update({
+			password: Auth.hashString(password),
+			passwordResetToken: null,
+			passwordResetTokenExp: null,
+		});
+
+		res.send(<http.Response> {success: true});
+	}
+
 	// returns data included in token payload
 	static whoami(req: Request, res: Response) {
 		res.send(<http.Response> {
