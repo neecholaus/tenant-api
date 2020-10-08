@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    target: 'node',
+    target: 'async-node',
 
     // webpack will take the files from ./src/index
     entry: './src/index',

@@ -1,7 +1,12 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 
+// response types
 import * as http from '../resources/http';
-import * as Auth from '../drivers/Auth';
+
+// drivers
+import Auth from '../drivers/Auth';
+
+// middleware
 import {authenticate} from '../middleware/authenticate';
 
 const router = express.Router();
@@ -43,8 +48,14 @@ router.post('/', function (req, res) {
 	}
 });
 
-router.get('/', authenticate, function (req, res) {
-	res.send('authenticated');
+
+router.get('/', authenticate, function (req: Request, res: Response) {
+	res.send(<http.Response> {
+		success: true,
+		data: {
+			authenticated: true
+		}
+	});
 });
 
-export {router as authRouter};
+export default router;

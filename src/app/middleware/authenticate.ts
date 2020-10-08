@@ -1,5 +1,5 @@
 import * as http from '../resources/http';
-import * as Auth from '../drivers/Auth';
+import Auth from '../drivers/Auth';
 
 export function authenticate(req, res, next) {
 	try {
