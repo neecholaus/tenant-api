@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import {NextFunction} from 'express';
 
 const UserSchema = new mongoose.Schema({
 	email: String,
@@ -7,6 +8,26 @@ const UserSchema = new mongoose.Schema({
 	password: String,
 	createdAt: Date,
 	updatedAt: Date
+}).pre<IUser>("update", function (next: NextFunction) {
+	this.updatedAt = new Date();
+	next();
+}).pre<IUser>("save", function (next: NextFunction) {
+	if (!this.createdAt) {
+		this.createdAt = new Date();
+	}
+
+	this.updatedAt = new Date();
+
+	next();
 });
+
+interface IUser extends mongoose.Document {
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	createdAt: Date;
+	updatedAt: Date;
+}
 
 export default mongoose.model('User', UserSchema);
