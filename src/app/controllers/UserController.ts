@@ -152,7 +152,6 @@ export default class UserController {
 
 		// only update these fields
 		const possibleUpdateFields: string[] = [
-			'email',
 			'phone',
 			'firstName',
 			'lastName'
@@ -177,9 +176,25 @@ export default class UserController {
 
 		let updated = await User.updateOne({email}, updatedValues);
 
-		console.log(updated);
-
-		res.send('ok');
+		// build either successful or error response
+		if (updated.nModified) {
+			res
+				.status(200)
+				.send(<http.Response> {
+					success: true,
+					data: {updatedValues}
+				});
+		} else {
+			res
+				.status(500)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Update Failed',
+						httpStatus: 500
+					}]
+				});
+		}
 	}
 
 	// returns data included in token payload
