@@ -28,6 +28,10 @@ router.get('/reset-password', function (req: Request, res: Response) {
 	return UserController.inquirePasswordReset(req, res);
 });
 
+router.put('/reset-password', function (req: Request, res: Response) {
+	return UserController.updatePassword(req, res);
+});
+
 // test authed endpoint
 router.get('/whoami', authenticate, function (req: Request, res: Response) {
 	return UserController.whoami(req, res);

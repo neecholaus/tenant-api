@@ -245,7 +245,7 @@ export default class UserController {
 		}
 
 		// 10 seconds in future
-		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 10;
+		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 30;
 
 		// perform update
 		await user.update({
@@ -258,6 +258,49 @@ export default class UserController {
 			success: true,
 			data: {token, email, tokenExpiresAt}
 		});
+	}
+
+	static async updatePassword(req: Request, res: Response) {
+		const {passwordResetToken, password} = req.body;
+
+		// find user by token
+		const user = await User.findOne({passwordResetToken});
+
+		// ensure token is real and assigned to user
+		if (!user) {
+			res
+				.status(400)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Bad Token',
+						detail: 'The token provided does not match any users.',
+						httpStatus: 400
+					}]
+				});
+
+			return;
+		}
+
+		const currentUnix = Math.floor(Date.now() / 1000);
+
+		// compare now vs token expiration
+		console.log(currentUnix, user.get('passwordResetTokenExp'));
+		if (currentUnix > user.get('passwordResetTokenExp')) {
+			res
+				.status(410)
+				.send(<http.Response> {
+					success: false,
+					errors: [<http.ResponseError> {
+						title: 'Expired',
+						detail: 'Password reset link has expired.'
+					}]
+				});
+
+			return;
+		}
+
+		res.send('ok');
 	}
 
 	// returns data included in token payload
