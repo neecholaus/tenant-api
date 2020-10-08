@@ -133,4 +133,14 @@ export default class UserController {
 			data: {token}
 		});
 	}
+
+	// returns data included in token payload
+	static whoami(req: Request, res: Response) {
+		res.send(<http.Response> {
+			success: true,
+			data: {
+				payload: req.app.get('authPayload')
+			}
+		});
+	}
 }

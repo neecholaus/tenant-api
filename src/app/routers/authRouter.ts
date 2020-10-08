@@ -22,13 +22,8 @@ router.post('/', async function (req: Request, res: Response) {
 });
 
 // test authed endpoint
-router.get('/', authenticate, function (req: Request, res: Response) {
-	res.send(<http.Response> {
-		success: true,
-		data: {
-			payload: req.app.get('authPayload')
-		}
-	});
+router.get('/whoami', authenticate, function (req: Request, res: Response) {
+	return UserController.whoami(req, res);
 });
 
 export default router;
