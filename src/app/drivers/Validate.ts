@@ -13,7 +13,7 @@ class Validate {
 				errors.push(<http.ResponseError>{
 					title: 'Missing Input',
 					detail: requiredInputs[inputName] + ' was not provided.',
-					httpStatus: 400
+					httpStatus: 422
 				});
 
 				continue;
@@ -24,7 +24,7 @@ class Validate {
 				errors.push(<http.ResponseError>{
 					title: 'Invalid Input',
 					detail: requiredInputs[inputName] + ' was invalid.',
-					httpStatus: 400
+					httpStatus: 422
 				});
 			}
 		}

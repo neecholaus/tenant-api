@@ -18,7 +18,7 @@ export default class UserController {
 		// return errors if required field(s) are missing
 		if (missingInputErrors.length) {
 			res
-				.status(400)
+				.status(422)
 				.send(<http.Response> {
 					success: false,
 					errors: missingInputErrors
@@ -78,7 +78,7 @@ export default class UserController {
 		// return any errors
 		if (missingInputErrors.length) {
 			res
-				.status(400)
+				.status(422)
 				.send(<http.Response> {
 					success: false,
 					errors: missingInputErrors
@@ -214,7 +214,7 @@ export default class UserController {
 		// return error if email was not provided
 		if (missingEmailError.length) {
 			res
-				.status(400)
+				.status(422)
 				.send(<http.Response> {
 					success: false,
 					errors: missingEmailError
