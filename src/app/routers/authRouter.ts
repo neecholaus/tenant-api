@@ -1,61 +1,41 @@
 import express, {Request, Response} from 'express';
 
-// response types
-import * as http from '../resources/http';
-
-// drivers
-import Auth from '../drivers/Auth';
-
 // middleware
 import {authenticate} from '../middleware/authenticate';
 
+// controllers
+import UserController from '../controllers/UserController';
+
 const router = express.Router();
 
-router.post('/', function (req, res) {
-	// assuming credentials match
-	const tempMatchingCreds = {
-		email: 'test@test.com',
-		pass: 'temppass'
-	};
-
-	const passedCreds = {
-		email: req.body.email,
-		pass: req.body.pass // will be encrypted
-	};
-
-	// passed creds matched
-	if (
-		passedCreds.email == tempMatchingCreds.email &&
-		passedCreds.pass == tempMatchingCreds.pass
-	) {
-		const token = Auth.generateToken(passedCreds);
-
-		res.send(<http.Response> {
-			success: true,
-			data: {token}
-		});
-	} else {
-		res
-			.status(403)
-			.send(<http.Response> {
-				success: false,
-				errors: [<http.ResponseError> {
-					title: 'Forbidden',
-					detail: 'Credentials were invalid.',
-					httpStatus: 403
-				}]
-			});
-	}
+// store
+router.post('/create', async function (req: Request, res: Response) {
+	return UserController.store(req, res);
 });
 
+// sign in
+router.post('/', async function (req: Request, res: Response) {
+	return UserController.signIn(req, res);
+});
 
-router.get('/', authenticate, function (req: Request, res: Response) {
-	res.send(<http.Response> {
-		success: true,
-		data: {
-			authenticated: true
-		}
-	});
+// update
+router.put('/update', authenticate, function (req: Request, res: Response) {
+	return UserController.update(req, res);
+});
+
+// reset password
+router.get('/reset-password', function (req: Request, res: Response) {
+	return UserController.inquirePasswordReset(req, res);
+});
+
+// submit new password
+router.put('/reset-password', function (req: Request, res: Response) {
+	return UserController.updatePassword(req, res);
+});
+
+// test authed endpoint
+router.get('/whoami', authenticate, function (req: Request, res: Response) {
+	return UserController.whoami(req, res);
 });
 
 export default router;
