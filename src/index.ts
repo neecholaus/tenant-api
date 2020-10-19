@@ -1,8 +1,8 @@
-import express, {Request, Response, NextFunction} from 'express';
+import * as express from 'express';
 const app = express();
 
 // support env variables
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config()
 
 // middleware
