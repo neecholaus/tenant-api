@@ -3,10 +3,8 @@ import * as http from '../resources/http';
 import Db from '../drivers/Db';
 
 export async function checkDbConnection(req: Request, res: Response, next: NextFunction) {
-	let connection;
-
 	try {
-		connection = await Db.connect(req.app.get('bag').env);
+		await Db.connect(req.app.get('bag').env);
 	} catch (err) {
 		res
 			.status(500)
