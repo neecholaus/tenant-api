@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 class Db {
 	static async connect(env: {MONGO_USER: string, MONGO_PASS: string, MONGO_SERVER: string}) {
@@ -12,6 +12,7 @@ class Db {
 				useUnifiedTopology: true
 			});
 		} catch (err) {
+			console.log(err);
 			throw new Error('Class [Db] could not establish a connection to MongoDB.');
 		}
 
