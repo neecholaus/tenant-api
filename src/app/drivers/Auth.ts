@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
-import cryptoRandomString from 'crypto-random-string';
+import * as cryptoRandomString from 'crypto-random-string';
 
 class Auth {
 

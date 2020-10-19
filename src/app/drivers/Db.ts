@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 
 class Db {
 	static async connect(env: {MONGO_USER: string, MONGO_PASS: string, MONGO_SERVER: string}) {

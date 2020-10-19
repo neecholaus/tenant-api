@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express';
+import {Router, Request, Response} from 'express';
 
 // middleware
 import {authenticate} from '../middleware/authenticate';
@@ -6,7 +6,7 @@ import {authenticate} from '../middleware/authenticate';
 // controllers
 import UserController from '../controllers/UserController';
 
-const router = express.Router();
+const router = Router();
 
 // store
 router.post('/create', async function (req: Request, res: Response) {
