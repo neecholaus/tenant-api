@@ -185,7 +185,7 @@ export default class UserController {
 		});
 
 		// object for sanitized mapping of request body
-		let updatedValues: any = {};
+		let updatedValues: { [inputName:string]: [string] } = {};
 
 		// move value from request body to sanitized mapping
 		for (let index in updatedKeys) {
