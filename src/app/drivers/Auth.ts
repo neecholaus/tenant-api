@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto-random-string';
+import cryptoRandomString from 'crypto-random-string';
 
 class Auth {
 
@@ -13,7 +14,7 @@ class Auth {
 	}
 
 	// Will attempt to decode and return token, if exception, throw custom error.
-	static decodeToken(token: string): object {
+	static decodeToken(token: string): string|object {
 		try {
 			return jwt.verify(token, process.env.JWT_SECRET);
 		} catch (err) {
@@ -32,8 +33,8 @@ class Auth {
 	}
 
 	// returns random string
-	static randomString(length: number = 12) {
-		return crypto({
+	static randomString(length: number = 12): string {
+		return cryptoRandomString({
 			length: length,
 			type: 'distinguishable'
 		});

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 class Db {
-	static async connect(env: {MONGO_USER, MONGO_PASS, MONGO_SERVER}) {
+	static async connect(env: {MONGO_USER: string, MONGO_PASS: string, MONGO_SERVER: string}) {
 		const {MONGO_USER, MONGO_PASS, MONGO_SERVER} = env;
 
 		const connectionUrl = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_SERVER}`;
