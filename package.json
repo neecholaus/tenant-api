@@ -4,7 +4,8 @@
   "description": "API for tenant and property management",
   "main": "index.js",
   "scripts": {
-    "tsc": "./node_modules/typescript/bin/tsc"
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "tsc-w": "./node_modules/typescript/bin/tsc -w"
   },
   "repository": {
     "type": "git",
