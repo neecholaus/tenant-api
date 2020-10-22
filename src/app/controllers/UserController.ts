@@ -5,6 +5,10 @@ import User from '../models/User';
 import Auth from '../drivers/Auth';
 
 export default class UserController {
+	static x() {
+		return 'test';
+	}
+
 	// store user
 	static async store(req: Request, res: Response) {
 		// ensure required fields are present
