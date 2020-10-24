@@ -1,4 +1,5 @@
 import * as express from 'express';
+import {Request, Response} from 'express';
 const app = express();
 
 // support env variables
@@ -21,6 +22,15 @@ let bag = {
 
 // assign value bag to express instance
 app.set('bag', bag);
+
+// initial splash page response
+app.get('/', (req: Request, res: Response) => {
+	res.status(200)
+		.send({
+			success: true,
+			message: req.app.get('bag').env.APP_NAME ?? 'API'
+		});
+})
 
 // auth module
 app.use('/auth', checkDbConnection, authRouter);
