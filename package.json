@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "./node_modules/typescript/bin/tsc",
     "tsc-w": "./node_modules/typescript/bin/tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "test-async": "jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
