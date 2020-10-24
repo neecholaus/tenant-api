@@ -10,7 +10,7 @@ dotenv.config()
 import {checkDbConnection} from './app/middleware/checkDbConnection';
 
 // routers
-import authRouter from './app/routers/authRouter';
+import authRouter from './app/routers/userRouter';
 
 // support json request bodies
 app.use(express.json());
