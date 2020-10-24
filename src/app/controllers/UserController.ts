@@ -5,11 +5,11 @@ import User from '../models/User';
 import Auth from '../drivers/Auth';
 
 export default class UserController {
-	static x() {
-		return 'test';
-	}
-
-	// store user
+	/**
+	 * Store user
+	 * @param req
+	 * @param res
+	 */
 	static async store(req: Request, res: Response) {
 		// ensure required fields are present
 		const missingInputErrors = Validate.require([
