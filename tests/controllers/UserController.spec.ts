@@ -169,4 +169,42 @@ describe("test auth router", () => {
 				}));
 			});
 	});
+
+	test('inquire pass reset with no body should return 422', () => {
+		return request(app)
+			.get('/auth/reset-password')
+			.then((res: Response) => {
+				expect(res.status).toBe(422);
+			});
+	});
+
+	test('inquire pass reset with body but bad email should return 404', () => {
+		return request(app)
+			.get('/auth/reset-password')
+			.send({
+				email: 'dummy@test.com'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(404);
+			});
+	});
+
+	test('inquire pass reset with valid body should return 200 with success and data: {token, email, tokenExpiresAt}', () => {
+		return request(app)
+			.get('/auth/reset-password')
+			.send({
+				email: 'test@test.com'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true,
+					data: {
+						token: expect.anything(),
+						email: expect.anything(),
+						tokenExpiresAt: expect.anything()
+					}
+				}));
+			});
+	});
 });
