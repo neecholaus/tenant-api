@@ -6,7 +6,7 @@ import Auth from '../drivers/Auth';
 
 export default class UserController {
 	/**
-	 * Store user
+	 * Creates new user and returns jwt token for sign in.
 	 * @param req
 	 * @param res
 	 */
@@ -74,7 +74,11 @@ export default class UserController {
 		});
 	}
 
-	// compare credentials, return jwt token
+	/**
+	 * Compare credentials, return jwt token if they are a match.
+	 * @param req
+	 * @param res
+	 */
 	static async signIn(req: Request, res: Response) {
 		// ensure email and password were passed
 		const missingInputErrors = Validate.require(['email', 'password'], req.body);
@@ -138,14 +142,19 @@ export default class UserController {
 		});
 	}
 
-	// update user
+	/**
+	 * Update fields on user document.
+	 *
+	 * @param req
+	 * @param res
+	 */
 	static async update(req: Request, res: Response) {
-		// ensure email is provided since this will be our search fielda
+		// ensure email is provided since this will be our search field
 		const missingInputErrors: http.ResponseError[] = Validate.require(['email'], req.body);
 
 		if (missingInputErrors.length) {
 			res
-				.status(400)
+				.status(422)
 				.send(<http.Response> {
 					success: false,
 					errors: missingInputErrors
@@ -248,8 +257,8 @@ export default class UserController {
 			return;
 		}
 
-		// 10 seconds in future
-		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 30;
+		// 2 minutes in future
+		const tokenExpiresAt = Math.floor(Date.now() / 1000) + 120;
 
 		// perform update
 		await user.update({
@@ -314,7 +323,13 @@ export default class UserController {
 		res.send(<http.Response> {success: true});
 	}
 
-	// returns data included in token payload
+	/**
+	 * Returns data included in the JWT payload assuming request passes
+	 * authentication middleware.
+	 *
+	 * @param req
+	 * @param res
+	 */
 	static whoami(req: Request, res: Response) {
 		res.send(<http.Response> {
 			success: true,
