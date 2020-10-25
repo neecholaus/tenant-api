@@ -39,4 +39,18 @@ describe("Test UserController", () => {
 				}));
 			});
 	});
+
+	test("create user after email already used should return 409", () => {
+		return request(app)
+			.post('/auth/create')
+			.send({
+				email: 'test@test.com',
+				password: 'testing',
+				firstName: 'Test',
+				lastName: 'Testman'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(409);
+			});
+	});
 });
