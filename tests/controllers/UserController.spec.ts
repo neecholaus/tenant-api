@@ -10,4 +10,16 @@ describe("Test UserController", () => {
 				expect(res.status).toBe(403);
 			});
 	});
+
+	test("create user should return 200 with success and token", () => {
+		return request(app)
+			.post('/auth')
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true,
+					token: expect.anything()
+				}));
+			});
+	})
 });
