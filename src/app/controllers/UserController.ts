@@ -318,7 +318,13 @@ export default class UserController {
 		res.send(<http.Response> {success: true});
 	}
 
-	// returns data included in token payload
+	/**
+	 * Returns data included in the JWT payload assuming request passes
+	 * authentication middleware.
+	 *
+	 * @param req
+	 * @param res
+	 */
 	static whoami(req: Request, res: Response) {
 		res.send(<http.Response> {
 			success: true,
