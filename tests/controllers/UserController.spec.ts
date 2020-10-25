@@ -19,7 +19,7 @@ describe("test auth router", () => {
 			});
 	})
 
-	test("create user with body should return 200 with success and token", () => {
+	test("create user with body should return 200 with success and data.token", () => {
 		// TODO - replace hard coded body with generated values
 		return request(app)
 			.post('/auth/create')
@@ -53,4 +53,54 @@ describe("test auth router", () => {
 				expect(res.status).toBe(409);
 			});
 	});
+
+	test("sign in without body should return 422", () => {
+		return request(app)
+			.post('/auth')
+			.then((res: Response) => {
+				expect(res.status).toBe(422);
+			});
+	});
+
+	test("sign in with body but bad email should return 400", () => {
+		return request(app)
+			.post('/auth')
+			.send({
+				email: 'bad@email.com',
+				password: 'dummy'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(400);
+			});
+	});
+
+	test("sign in with body but bad password should return 400", () => {
+		return request(app)
+			.post('/auth')
+			.send({
+				email: 'test@test.com',
+				password: 'dummy'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(400);
+			});
+	});
+
+	test("sign in with valid credentials should return 200 with success and data.token", () => {
+		return request(app)
+			.post('/auth')
+			.send({
+				email: 'test@test.com',
+				password: 'testing'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true,
+					data: {
+						token: expect.anything()
+					}
+				}))
+			});
+	})
 });

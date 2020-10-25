@@ -6,7 +6,7 @@ import Auth from '../drivers/Auth';
 
 export default class UserController {
 	/**
-	 * Store user
+	 * Creates new user and returns jwt token for sign in.
 	 * @param req
 	 * @param res
 	 */
@@ -74,7 +74,11 @@ export default class UserController {
 		});
 	}
 
-	// compare credentials, return jwt token
+	/**
+	 * Compare credentials, return jwt token if they are a match.
+	 * @param req
+	 * @param res
+	 */
 	static async signIn(req: Request, res: Response) {
 		// ensure email and password were passed
 		const missingInputErrors = Validate.require(['email', 'password'], req.body);
