@@ -3,6 +3,7 @@ import {Response} from 'supertest';
 import app from '../../src/app';
 
 let jwtTokenAfterSignIn: string;
+let passwordResetToken: string;
 
 describe("test auth router", () => {
 	test("create user with no body should return 422", () => {
@@ -189,7 +190,7 @@ describe("test auth router", () => {
 			});
 	});
 
-	test('inquire pass reset with valid body should return 200 with success and data: {token, email, tokenExpiresAt}', () => {
+	test('inquire pass reset with valid body should return 200 with success and data', () => {
 		return request(app)
 			.get('/auth/reset-password')
 			.send({
@@ -204,6 +205,35 @@ describe("test auth router", () => {
 						email: expect.anything(),
 						tokenExpiresAt: expect.anything()
 					}
+				}));
+
+				// assign token for use in more tests
+				passwordResetToken = res.body.data.token;
+			});
+	});
+
+	test('update password with no/invalid token should return 400', () => {
+		return request(app)
+			.put('/auth/reset-password')
+			.send({
+				passwordResetToken: 'dummy'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(400);
+			});
+	});
+
+	test('update password with valid token should return 200 with success', () => {
+		return request(app)
+			.put('/auth/reset-password')
+			.send({
+				passwordResetToken: passwordResetToken,
+				password: 'updatedPassword'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true
 				}));
 			});
 	});
