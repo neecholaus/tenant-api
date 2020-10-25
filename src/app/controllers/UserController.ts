@@ -142,14 +142,19 @@ export default class UserController {
 		});
 	}
 
-	// update user
+	/**
+	 * Update fields on user document.
+	 *
+	 * @param req
+	 * @param res
+	 */
 	static async update(req: Request, res: Response) {
-		// ensure email is provided since this will be our search fielda
+		// ensure email is provided since this will be our search field
 		const missingInputErrors: http.ResponseError[] = Validate.require(['email'], req.body);
 
 		if (missingInputErrors.length) {
 			res
-				.status(400)
+				.status(422)
 				.send(<http.Response> {
 					success: false,
 					errors: missingInputErrors

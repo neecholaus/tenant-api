@@ -123,4 +123,50 @@ describe("test auth router", () => {
 				}));
 			});
 	});
+
+	test('update user without token', () => {
+		return request(app)
+			.put('/auth/update')
+			.then((res: Response) => {
+				expect(res.status).toBe(403);
+			});
+	});
+
+	test('update user with token but without body', () => {
+		return request(app)
+			.put('/auth/update')
+			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
+			.then((res: Response) => {
+				expect(res.status).toBe(422);
+			});
+	});
+
+	test('update user with body.email not the same as in token payload', () => {
+		return request(app)
+			.put('/auth/update')
+			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
+			.send({email: 'dummy@test.com'})
+			.then((res: Response) => {
+				expect(res.status).toBe(403)
+			});
+	});
+
+	test('update user with valid token and body', () => {
+		return request(app)
+			.put('/auth/update')
+			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
+			.send({
+				email: 'test@test.com',
+				firstName: 'Test Update Name'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true,
+					data: {
+						updatedValues: expect.anything()
+					}
+				}));
+			});
+	});
 });
