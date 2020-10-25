@@ -13,16 +13,30 @@ describe("Test UserController", () => {
 
 	test("create user with no body should return 422", () => {
 		return request(app)
-			.post('/auth')
+			.post('/auth/create')
 			.then((res: Response) => {
 				expect(res.status).toBe(422);
 			});
 	})
 
-	// test("should return 200 with success and token", () => {
-		// expect(res.body).toEqual(expect.objectContaining({
-		// 	success: true,
-		// 	token: expect.anything()
-		// }));
-	// });
+	test("create user with body should return 200 with success and token", () => {
+		// TODO - replace hard coded body with generated values
+		return request(app)
+			.post('/auth/create')
+			.send({
+				email: 'test@test.com',
+				password: 'testing',
+				firstName: 'Test',
+				lastName: 'Testman'
+			})
+			.then((res: Response) => {
+				expect(res.status).toBe(200);
+				expect(res.body).toEqual(expect.objectContaining({
+					success: true,
+					data: {
+						token: expect.anything()
+					}
+				}));
+			});
+	});
 });
