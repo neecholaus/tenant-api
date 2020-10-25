@@ -124,7 +124,7 @@ describe("test auth router", () => {
 			});
 	});
 
-	test('update user without token', () => {
+	test('update user without token should return 403', () => {
 		return request(app)
 			.put('/auth/update')
 			.then((res: Response) => {
@@ -132,7 +132,7 @@ describe("test auth router", () => {
 			});
 	});
 
-	test('update user with token but without body', () => {
+	test('update user with token but without body should return 422', () => {
 		return request(app)
 			.put('/auth/update')
 			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
@@ -141,7 +141,7 @@ describe("test auth router", () => {
 			});
 	});
 
-	test('update user with body.email not the same as in token payload', () => {
+	test('update user with body.email not the same as in token payload should return 403', () => {
 		return request(app)
 			.put('/auth/update')
 			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
@@ -151,7 +151,7 @@ describe("test auth router", () => {
 			});
 	});
 
-	test('update user with valid token and body', () => {
+	test('update user with valid token and body should return 200 with success and data.updatedValues', () => {
 		return request(app)
 			.put('/auth/update')
 			.set('Authorization', `Bearer: ${jwtTokenAfterSignIn}`)
